@@ -1,93 +1,76 @@
 <!doctype html>
-<meta charset="utf-8" />
-<title>簡易ブロック崩し</title>
-<canvas id="game" width="480" height="320" style="background:#111;display:block;margin:24px auto;border:1px solid #444"></canvas>
-<script>
-const cvs = document.getElementById('game');
-const ctx = cvs.getContext('2d');
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Block Breaker</title>
+  <link rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Block Breaker</h1>
+    <div class="status">
+      <span id="statusLevel">Lv 1</span>
+      <span id="statusLives">❤ 3</span>
+      <span id="statusBalls">⚪ 1</span>
+    </div>
+  </header>
 
-// --- 基本状態 ---
-const W = cvs.width, H = cvs.height;
-const paddle = { w: 75, h: 12, x: (W-75)/2, y: H-20, speed: 6, dir: 0 };
-const ball = { x: W/2, y: H-40, r: 6, vx: 3, vy: -3 };
-const cols = 8, rows = 5, brick = { w: 50, h: 16, pad: 8, offX: 22, offY: 32 };
-let bricks = [];
-for (let r=0; r<rows; r++) {
-  for (let c=0; c<cols; c++) {
-    bricks.push({ x: brick.offX + c*(brick.w+brick.pad), y: brick.offY + r*(brick.h+brick.pad), alive: true });
-  }
-}
+  <main class="layout">
+    <section class="stage">
+      <canvas id="game" width="640" height="480"></canvas>
+      <div id="overlay" class="overlay blink">PUSH SPACE TO START</div>
+      <div id="gameover" class="overlay hidden">GAME OVER<br><small>Press SPACE to restart</small></div>
+    </section>
 
-// --- 入力 ---
-addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft')  paddle.dir = -1;
-  if (e.key === 'ArrowRight') paddle.dir =  1;
-});
-addEventListener('keyup', e => {
-  if ((e.key === 'ArrowLeft'  && paddle.dir === -1) ||
-      (e.key === 'ArrowRight' && paddle.dir ===  1)) paddle.dir = 0;
-});
+    <aside class="panel">
+      <h2>設定</h2>
 
-// --- 物理＆当たり ---
-function update() {
-  // パドル移動
-  paddle.x += paddle.dir * paddle.speed;
-  paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
+      <label class="row">
+        <span>ライフ</span>
+        <input id="inputLives" type="number" min="1" max="99" value="3">
+      </label>
 
-  // ボール移動
-  ball.x += ball.vx; ball.y += ball.vy;
+      <label class="row">
+        <span>レベル (1-99)</span>
+        <input id="inputLevel" type="number" min="1" max="99" value="1">
+      </label>
 
-  // 壁
-  if (ball.x < ball.r || ball.x > W - ball.r) ball.vx *= -1;
-  if (ball.y < ball.r) ball.vy *= -1;
+      <label class="row">
+        <span>アイテム確率 (%)</span>
+        <input id="inputDrop" type="number" min="0" max="100" step="1" value="5">
+      </label>
 
-  // パドル
-  if (ball.y + ball.r >= paddle.y &&
-      ball.x >= paddle.x && ball.x <= paddle.x + paddle.w &&
-      ball.vy > 0) {
-    ball.vy *= -1;
-    // ヒット位置で角度を少し変える
-    const hit = (ball.x - (paddle.x + paddle.w/2)) / (paddle.w/2);
-    ball.vx = 3 * hit;
-  }
+      <label class="row">
+        <span>アイテム落下速度 (px/s)</span>
+        <input id="inputFall" type="number" min="20" max="600" step="10" value="140">
+      </label>
 
-  // ブロック
-  for (const b of bricks) {
-    if (!b.alive) continue;
-    if (ball.x + ball.r > b.x && ball.x - ball.r < b.x + brick.w &&
-        ball.y + ball.r > b.y && ball.y - ball.r < b.y + brick.h) {
-      b.alive = false;
-      // どちら側から当たったか簡易判定
-      const overlapX = Math.min(ball.x + ball.r - b.x, b.x + brick.w - (ball.x - ball.r));
-      const overlapY = Math.min(ball.y + ball.r - b.y, b.y + brick.h - (ball.y - ball.r));
-      if (overlapX < overlapY) ball.vx *= -1; else ball.vy *= -1;
-      break;
-    }
-  }
+      <label class="row">
+        <span>背景ファイル名</span>
+        <input id="inputBg" type="text" placeholder="bg.jpg（assets/backgrounds/）">
+      </label>
 
-  // 落下（リセット）
-  if (ball.y - ball.r > H) {
-    ball.x = W/2; ball.y = H-40; ball.vx = 3; ball.vy = -3;
-    paddle.x = (W - paddle.w)/2;
-    bricks.forEach(b => b.alive = true);
-  }
-}
+      <div class="buttons">
+        <button id="btnApply">設定を反映してリスタート</button>
+      </div>
 
-// --- 描画 ---
-function draw() {
-  ctx.clearRect(0,0,W,H);
-  // パドル
-  ctx.fillStyle = '#eee';
-  ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
-  // ボール
-  ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2); ctx.fill();
-  // ブロック
-  ctx.fillStyle = '#6cf';
-  for (const b of bricks) if (b.alive) ctx.fillRect(b.x, b.y, brick.w, brick.h);
-}
+      <hr>
 
-// --- ループ ---
-(function loop(){
-  update(); draw(); requestAnimationFrame(loop);
-})();
-</script>
+      <section class="legend">
+        <h3>アイテム</h3>
+        <ul>
+          <li><b>M</b>：マルチボール（+2）</li>
+          <li><b>L</b>：ロング（パドル拡張）</li>
+          <li><b>S</b>：ショート（パドル縮小）</li>
+          <li><b>U</b>：スピードアップ</li>
+          <li><b>D</b>：スピードダウン</li>
+          <li><b>B</b>：ブレイク（貫通・強度無視, 一時的）</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
