@@ -7,20 +7,22 @@
   <link rel="stylesheet" href="./styles/style.css" />
 </head>
 <body>
-  <!-- ヘッダー：ハンバーガー＋ステータス -->
+  <!-- ヘッダー：左にタイトル、右にステータス＋ハンバーガー -->
   <header class="topbar">
-    <button id="btnMenu" class="hamburger" aria-label="Open menu">☰</button>
-    <h1>Block Breaker</h1>
-    <div class="status">
-      <span id="statusLevel">Lv 1</span>
-      <span id="statusLives">❤ 3</span>
-      <span id="statusBalls">⚪ 1</span>
+    <h1 class="title">Block Breaker</h1>
+    <div class="top-actions">
+      <div class="status">
+        <span id="statusLevel">Lv 1</span>
+        <span id="statusLives">❤ 3</span>
+        <span id="statusBalls">⚪ 1</span>
+      </div>
+      <button id="btnMenu" class="hamburger" aria-label="Open menu">☰</button>
     </div>
   </header>
 
   <main class="layout">
     <!-- ゲーム画面 -->
-    <section class="stage">
+    <section class="stage" id="stage">
       <canvas id="game" width="640" height="480"></canvas>
       <div id="overlay" class="overlay blink">PUSH SPACE / TAP TO START</div>
       <div id="gameover" class="overlay hidden">
