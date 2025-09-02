@@ -11,9 +11,9 @@ export class Paddle {
     const oldX=this.x;
     if (input.left)  this.x -= this.speed*dt;
     if (input.right) this.x += this.speed*dt;
-    if (input.pointerVX) this.x += input.pointerVX * dt; // スワイプ速度
+    if (Math.abs(input.pointerVX) > 1) this.x += input.pointerVX * dt;
     this.x=Math.max(0, Math.min(this.bounds.W-this.w, this.x));
     this.vx=(this.x-oldX)/Math.max(dt,1e-6);
   }
-  draw(ctx){ ctx.fillStyle='#e8ecf1'; ctx.fillRect(this.x,this.y,this.w,this.h); }
+
 }
