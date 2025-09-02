@@ -1,0 +1,15 @@
+{
+  "backgrounds": ["bg.jpg", "space.jpg", "city.png"],
+  "bgm": {
+    "play": ["play.mp3"],
+    "clear": ["clear.mp3"]
+  },
+  "sfx": {
+    "paddle": ["paddle.wav"],
+    "wall":   ["wall.wav"],
+    "brick":  ["brick.wav"],
+    "break":  ["break.wav"],
+    "speedup":["speedup.wav"],
+    "item":   ["item.wav"]
+  }
+}
