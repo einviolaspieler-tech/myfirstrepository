@@ -22,16 +22,17 @@ body {
 .topbar {
   display: flex;
   align-items: center;
-  gap: 12px;
   justify-content: space-between;
+  gap: 12px;
   padding: 8px 16px;
   background: #0c0e13;
   border-bottom: 1px solid #1e222b;
 }
-.topbar h1 { margin: 0; font-size: 18px; letter-spacing: .5px; }
+.topbar .title { margin: 0; font-size: 18px; letter-spacing: .5px; }
+.top-actions { display: flex; align-items: center; gap: 12px; }
 .status { display: flex; gap: 12px; color: var(--muted); }
 
-/* Hamburger button */
+/* Hamburger button (右上) */
 .hamburger{
   display: none;
   margin: 0;
@@ -66,7 +67,8 @@ body {
   position: absolute; inset: 0; display: grid; place-items: center;
   text-align: center; font-weight: 700; letter-spacing: 1px;
   color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.6);
-  pointer-events: none;
+  /* ← クリック可能にしてタップを拾う */
+  pointer-events: auto;
 }
 .overlay.blink { animation: blink 1s steps(2, start) infinite; }
 .hidden { display: none; }
