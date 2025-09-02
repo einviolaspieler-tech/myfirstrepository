@@ -186,4 +186,79 @@ export class Game {
     this.items = this.items.filter(it=>{
       const p=this.paddle;
       const withinX=it.x>=p.x && it.x<=p.x+p.w;
-      const withinY=it.y+it.size/2>=p.y && it.y-it.si
+      const withinY=it.y+it.size/2>=p.y && it.y-it.size/2<=p.y+p.h;
+      if (withinX && withinY){ this.audio?.playSfx('item'); applyItem(this, it.type); this.updateBallCountUI(); return false; }
+      return it.y < this.cvs.height + it.size;
+    });
+
+    // ライフ/リスタート
+    this.balls = this.balls.filter(b=>b.y-b.r<=this.cvs.height+4);
+    if (this.balls.length===0){
+      this.lives--; this.updateLivesUI();
+      if (this.lives<=0){
+        this.state='gameover';
+        document.getElementById('gameover').classList.remove('hidden');
+        this.audio?.stopBgm('play'); this.audio?.playBgm('clear');
+        return;
+      }
+      this.state='ready';
+      document.getElementById('overlay').classList.remove('hidden');
+      this.#resetPaddleAndBall();
+    }
+
+    // 全消し→次レベル
+    if (this.bricks.every(b=>!b.alive)){
+      this.level=Math.min(99,this.level+1);
+      this.updateLevelUI();
+      this.state='ready';
+      document.getElementById('overlay').classList.remove('hidden');
+      this.#resetLevel(); this.#resetPaddleAndBall();
+      this.prevTier=0;
+    }
+  }
+
+  draw(){
+    const ctx=this.ctx;
+    // 背景
+    if (this.bgImage) this.#drawBackground(this.bgImage, this.bgFit);
+    else { ctx.fillStyle='#111'; ctx.fillRect(0,0,this.cvs.width,this.cvs.height); }
+
+    for (const b of this.bricks) b.draw(ctx);
+    this.paddle.draw(ctx);
+    for (const b of this.balls) b.draw(ctx);
+    for (const it of this.items) it.draw(ctx);
+
+    if (this.breakTimer>0){
+      ctx.fillStyle='rgba(255,255,255,.9)'; ctx.font='bold 12px system-ui';
+      ctx.fillText(`BREAK ${this.breakTimer.toFixed(1)}s`, 8, this.cvs.height-8);
+    }
+  }
+
+  #drawBackground(img, mode){
+    const W=this.cvs.width, H=this.cvs.height, ctx=this.ctx;
+    const ir=img.width/img.height, cr=W/H;
+
+    if (mode==='contain'){
+      let dw=W, dh=W/ir;
+      if (dh>H){ dh=H; dw=H*ir; }
+      const dx=(W-dw)/2, dy=(H-dh)/2;
+      ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+      ctx.drawImage(img, 0,0,img.width,img.height, dx,dy,dw,dh);
+      ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(0,0,W,H);
+      return;
+    }
+
+    // cover（中央/上寄せ）
+    let sx=0, sy=0, sw=img.width, sh=img.height;
+    if (ir>cr){ // 画像が横長 → 横をトリム
+      sw = sh*cr;
+      sx = (img.width - sw)/2;
+    }else{     // 画像が縦長 → 縦をトリム
+      sh = sw/cr;
+      sy = (mode==='cover-top') ? 0 : (img.height - sh)/2;
+    }
+    ctx.drawImage(img, sx,sy,sw,sh, 0,0,W,H);
+    ctx.fillStyle='rgba(0,0,0,.25)';
+    ctx.fillRect(0,0,W,H);
+  }
+}
