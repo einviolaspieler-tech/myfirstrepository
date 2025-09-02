@@ -2,12 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Block Breaker</title>
   <link rel="stylesheet" href="./styles/style.css" />
 </head>
 <body>
+  <!-- ヘッダー：ハンバーガー＋ステータス -->
   <header class="topbar">
+    <button id="btnMenu" class="hamburger" aria-label="Open menu">☰</button>
     <h1>Block Breaker</h1>
     <div class="status">
       <span id="statusLevel">Lv 1</span>
@@ -17,13 +19,17 @@
   </header>
 
   <main class="layout">
+    <!-- ゲーム画面 -->
     <section class="stage">
       <canvas id="game" width="640" height="480"></canvas>
       <div id="overlay" class="overlay blink">PUSH SPACE / TAP TO START</div>
-      <div id="gameover" class="overlay hidden">GAME OVER<br><small>Press SPACE / Tap to restart</small></div>
+      <div id="gameover" class="overlay hidden">
+        GAME OVER<br><small>Press SPACE / Tap to restart</small>
+      </div>
     </section>
 
-    <aside class="panel">
+    <!-- 設定パネル（デスクトップ=固定、モバイル=ドロワー） -->
+    <aside class="panel drawer" id="drawer">
       <h2>設定</h2>
 
       <label class="row">
@@ -57,10 +63,12 @@
           <option value="contain">contain（全体表示）</option>
         </select>
       </label>
+
       <label class="row">
         <span>アセット選択</span>
         <select id="selectBg"></select>
       </label>
+
       <label class="row">
         <span>手入力</span>
         <input id="inputBg" type="text" placeholder="bg.jpg（assets/backgrounds/）">
@@ -73,14 +81,17 @@
         <span>BGM（プレイ）</span>
         <select id="selectBgmPlay"></select>
       </label>
+
       <label class="row">
         <span>BGM（クリア）</span>
         <select id="selectBgmClear"></select>
       </label>
+
       <label class="row">
         <span>音量</span>
         <input id="inputVol" type="range" min="0" max="1" step="0.05" value="0.6">
       </label>
+
       <label class="row">
         <span>ミュート</span>
         <input id="chkMute" type="checkbox">
@@ -106,6 +117,10 @@
     </aside>
   </main>
 
+  <!-- ドロワー用バックドロップ（モバイル時に使用） -->
+  <div id="backdrop" class="backdrop hidden"></div>
+
+  <!-- メインスクリプト -->
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>
