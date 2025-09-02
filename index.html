@@ -19,8 +19,8 @@
   <main class="layout">
     <section class="stage">
       <canvas id="game" width="640" height="480"></canvas>
-      <div id="overlay" class="overlay blink">PUSH SPACE TO START</div>
-      <div id="gameover" class="overlay hidden">GAME OVER<br><small>Press SPACE to restart</small></div>
+      <div id="overlay" class="overlay blink">PUSH SPACE / TAP TO START</div>
+      <div id="gameover" class="overlay hidden">GAME OVER<br><small>Press SPACE / Tap to restart</small></div>
     </section>
 
     <aside class="panel">
@@ -38,7 +38,7 @@
 
       <label class="row">
         <span>アイテム確率 (%)</span>
-        <input id="inputDrop" type="number" min="0" max="100" step="1" value="5">
+        <input id="inputDrop" type="number" min="0" max="100" step="1" value="10">
       </label>
 
       <label class="row">
@@ -46,9 +46,44 @@
         <input id="inputFall" type="number" min="20" max="600" step="10" value="140">
       </label>
 
+      <hr>
+
+      <h3>背景</h3>
       <label class="row">
-        <span>背景ファイル名</span>
+        <span>表示モード</span>
+        <select id="selectBgFit">
+          <option value="cover-center">cover（中央）</option>
+          <option value="cover-top">cover（上寄せ）</option>
+          <option value="contain">contain（全体表示）</option>
+        </select>
+      </label>
+      <label class="row">
+        <span>アセット選択</span>
+        <select id="selectBg"></select>
+      </label>
+      <label class="row">
+        <span>手入力</span>
         <input id="inputBg" type="text" placeholder="bg.jpg（assets/backgrounds/）">
+      </label>
+
+      <hr>
+
+      <h3>サウンド</h3>
+      <label class="row">
+        <span>BGM（プレイ）</span>
+        <select id="selectBgmPlay"></select>
+      </label>
+      <label class="row">
+        <span>BGM（クリア）</span>
+        <select id="selectBgmClear"></select>
+      </label>
+      <label class="row">
+        <span>音量</span>
+        <input id="inputVol" type="range" min="0" max="1" step="0.05" value="0.6">
+      </label>
+      <label class="row">
+        <span>ミュート</span>
+        <input id="chkMute" type="checkbox">
       </label>
 
       <div class="buttons">
@@ -65,7 +100,7 @@
           <li><b>S</b>：ショート（パドル縮小）</li>
           <li><b>U</b>：スピードアップ</li>
           <li><b>D</b>：スピードダウン</li>
-          <li><b>B</b>：ブレイク（貫通・強度無視, 一時的）</li>
+          <li><b>B</b>：ブレイク（貫通/強度無視, 一時）</li>
         </ul>
       </section>
     </aside>
