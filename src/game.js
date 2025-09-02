@@ -44,6 +44,22 @@ export class Game {
 
     this.last=performance.now();
     requestAnimationFrame(this.#loop.bind(this));
+
+      resize(width, height){
+    if (!width || !height) return;
+    this.cvs.width = Math.floor(width);
+    this.cvs.height = Math.floor(height);
+    // 境界更新
+    this.paddle.bounds = { W: this.cvs.width, H: this.cvs.height };
+    this.paddle.y = this.cvs.height - 28;
+    // レイアウトを画面に合わせて作り直す（進行はリセット）
+    const keepLevel = this.level, keepLives = this.lives;
+    this.#resetLevel();
+    this.#resetPaddleAndBall();
+    this.level = keepLevel; this.lives = Math.max(1, keepLives); // 表示維持
+    this.updateLevelUI(); this.updateLivesUI(); this.updateBallCountUI();
+  }
+
   }
 
   // ===== API =====
