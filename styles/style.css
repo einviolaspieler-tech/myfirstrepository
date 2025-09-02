@@ -27,3 +27,43 @@ button:active{transform:translateY(1px)}
 hr{border:0;border-top:1px solid #2a2f3a;margin:12px 0}
 .legend ul{margin:6px 0 0 20px;padding:0}
 .legend li{margin:2px 0;color:var(--muted)}
+
+/* ハンバーガー */
+.hamburger{
+  display:none; margin:0; padding:6px 10px; font-size:18px;
+  border:1px solid #2a2f3a; border-radius:8px; background:#0f121a; color:#e8ecf1;
+}
+
+/* ドロワー共通 */
+.drawer{ z-index:50 }
+.backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.45);
+  opacity:0; visibility:hidden; transition:opacity .2s; z-index:40;
+}
+.backdrop.show{ opacity:1; visibility:visible; }
+
+/* ===== モバイル（幅<=900px） ===== */
+@media (max-width: 900px){
+  .layout{ grid-template-columns: 1fr; padding: 8px; }
+  .topbar{ position:sticky; top:0; z-index:60 }
+  .hamburger{ display:inline-block; }
+  .status{ display:none } /* ステータスは省スペースのため隠す（必要なら残してOK） */
+
+  .stage{ margin:0; }
+  /* キャンバスを画面いっぱいに */
+  #game{
+    width:100vw; height:auto; max-width:100vw;
+    border:1px solid #2a2f3a;
+  }
+
+  /* パネルは右側からスライドイン */
+  .panel.drawer{
+    position:fixed; right:0; top:48px; /* topbar 高さに合わせる */
+    width:min(86vw, 340px);
+    height:calc(100dvh - 48px);
+    overflow:auto;
+    transform:translateX(100%);
+    transition:transform .25s ease;
+  }
+  .panel.drawer.open{ transform:translateX(0); }
+}
