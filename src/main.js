@@ -6,6 +6,8 @@ import { AudioManager } from './audio.js';
 const cvs = document.getElementById('game');
 cvs.width = CONFIG.canvas.width;
 cvs.height = CONFIG.canvas.height;
+// スワイプを取りこぼさないように
+cvs.style.touchAction = 'none';
 
 const ui = {
   level: document.getElementById('statusLevel'),
@@ -30,10 +32,21 @@ const inputVol   = document.getElementById('inputVol');
 const chkMute    = document.getElementById('chkMute');
 const btnApply   = document.getElementById('btnApply');
 
-// ===== ドロワー（モバイル）要素 =====
+// ===== ドロワー要素 =====
 const btnMenu  = document.getElementById('btnMenu');
 const drawer   = document.getElementById('drawer');
 const backdrop = document.getElementById('backdrop');
+
+// ===== タップ開始の取りこぼし対策（overlay/stage/gameover 全部で拾う） =====
+const overlayEl  = document.getElementById('overlay');
+const gameoverEl = document.getElementById('gameover');
+const stageEl    = document.getElementById('stage');
+const flagTap = () => { game.input.tapped = true; };
+['pointerdown','touchstart','click'].forEach(ev=>{
+  overlayEl.addEventListener(ev, flagTap, {passive:true});
+  gameoverEl.addEventListener(ev, flagTap, {passive:true});
+  stageEl.addEventListener(ev, flagTap, {passive:true});
+});
 
 // ===== 初期値の反映 =====
 game.setLives(parseInt(inputLives.value, 10) || CONFIG.defaultLives);
@@ -63,11 +76,8 @@ async function loadManifest(){
     fillSelect(selectBg, m.backgrounds);
     fillSelect(selectBgmPlay,  m.bgm?.play || []);
     fillSelect(selectBgmClear, m.bgm?.clear || []);
-  }catch(e){
-    // マニフェスト無しでも動くように空で初期化
-    fillSelect(selectBg, []);
-    fillSelect(selectBgmPlay, []);
-    fillSelect(selectBgmClear, []);
+  }catch{
+    fillSelect(selectBg, []); fillSelect(selectBgmPlay, []); fillSelect(selectBgmClear, []);
   }
 }
 loadManifest();
@@ -105,7 +115,6 @@ btnApply.addEventListener('click', async () => {
 
   // 反映して再開
   game.applyAndRestart();
-  // モバイルでは閉じて視界を広げる
   closeDrawer();
 });
 
@@ -162,5 +171,3 @@ addEventListener('resize', fitCanvas);
 addEventListener('orientationchange', fitCanvas);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(fitCanvas, 50); });
 fitCanvas(); // 初回
-
-// ===== 以上 =====
