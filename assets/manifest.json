@@ -1,5 +1,5 @@
 {
-  "backgrounds": ["bg.jpg", "space.jpg", "city.png"],
+  "backgrounds": ["c1.jpg", "space.jpg", "city.png"],
   "bgm": {
     "play": ["play.mp3"],
     "clear": ["clear.mp3"]
