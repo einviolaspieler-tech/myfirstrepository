@@ -1,15 +1,15 @@
 {
-  "backgrounds": ["c1.jpg", "dummy1.jpg", "dummy2.png"],
+  "backgrounds": [],
   "bgm": {
-    "play": ["play.mp3"],
-    "clear": ["clear.mp3"]
+    "play": [],
+    "clear": []
   },
   "sfx": {
     "paddle": ["paddle.wav"],
-    "wall":   ["wall.wav"],
-    "brick":  ["brick.wav"],
-    "break":  ["break.wav"],
-    "speedup":["speedup.wav"],
-    "item":   ["item.wav"]
+    "wall": ["wall.wav"],
+    "brick": ["brick.wav"],
+    "break": ["break.wav"],
+    "speedup": ["speedup.wav"],
+    "item": ["item.wav"]
   }
 }
